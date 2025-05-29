@@ -1091,42 +1091,28 @@
                     
                     // Handle both array and single object responses
                     const orderResult = Array.isArray(result) ? result[0] : result;
-                    const newOrderId = orderResult.id;
+                    const newOrderId = orderResult?.id || Date.now(); // Fallback to timestamp if no ID
                     
-                    if (!newOrderId) {
-                        console.error('No order ID in response:', result);
-                        // Generate a temporary ID for display purposes
-                        const tempId = Date.now();
-                        console.log('Using temporary ID:', tempId);
-                        
-                        // Still show success even without proper ID
-                        orderHistory.push({
-                            id: tempId,
-                            items: [...cart],
-                            total: cart.reduce((sum, item) => sum + item.totalPrice, 0)
-                        });
-                        
-                        addProgressBar(tempId, cart);
-                        clearCart();
-                        showOrderSuccess();
-                        return;
-                    }
+                    console.log('Using order ID:', newOrderId); // Debug log
                     
-                    // Add to order history
+                    // Add to order history FIRST
                     orderHistory.push({
                         id: newOrderId,
                         items: [...cart],
                         total: cart.reduce((sum, item) => sum + item.totalPrice, 0)
                     });
                     
-                    // Add new progress bar for this order
-                    addProgressBar(newOrderId, cart);
+                    console.log('Order history updated:', orderHistory); // Debug log
                     
                     // Clear cart and form for next order
                     clearCart();
                     
+                    // Add new progress bar for this order
+                    addProgressBar(newOrderId, orderHistory[orderHistory.length - 1].items);
+                    
                     // Show success (keeps menu visible)
                     showOrderSuccess();
+                    
                 } else {
                     const errorText = await response.text();
                     console.error('Server response error:', response.status, errorText);
