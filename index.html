@@ -1198,6 +1198,91 @@
             document.getElementById('orderNotes').value = '';
         }
 
+        function addProgressBar(orderId, orderItems) {
+            const progressContainer = document.getElementById('progressContainer');
+            
+            // Create order summary
+            const orderSummary = orderItems.map(item => item.name).join(', ');
+            const shortSummary = orderSummary.length > 50 ? orderSummary.substring(0, 50) + '...' : orderSummary;
+            
+            // Create new progress bar HTML
+            const progressHTML = `
+                <div class="progress-container" id="progress-${orderId}" style="margin-bottom: 25px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                    <h4 style="margin-bottom: 10px; color: white;">Order #${orderId}: ${shortSummary}</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill-${orderId}" style="width: 25%;"></div>
+                    </div>
+                    <div class="progress-text" id="progressText-${orderId}">Order Received</div>
+                </div>
+            `;
+            
+            progressContainer.insertAdjacentHTML('beforeend', progressHTML);
+            
+            // Update header text if this is the first order
+            if (orderHistory.length === 1) {
+                document.querySelector('#orderSuccess h2').textContent = 'Order Placed Successfully!';
+                document.querySelector('#orderSuccess p').textContent = 'Your order has been received and is being prepared.';
+            } else {
+                document.querySelector('#orderSuccess h2').textContent = 'Orders Placed Successfully!';
+                document.querySelector('#orderSuccess p').textContent = 'Your orders have been received and are being prepared.';
+            }
+            
+            // Start progress tracking for this specific order
+            trackOrderProgress(orderId);
+        }
+
+        function trackOrderProgress(orderId) {
+            const progressStates = [
+                { width: '25%', text: 'Order Received' },
+                { width: '50%', text: 'Preparing Your Order' },
+                { width: '75%', text: 'Almost Ready' },
+                { width: '100%', text: 'Order Complete!' }
+            ];
+            
+            let currentState = 0;
+            
+            const interval = setInterval(() => {
+                if (currentState < progressStates.length - 1) {
+                    currentState++;
+                    const state = progressStates[currentState];
+                    const progressFill = document.getElementById(`progressFill-${orderId}`);
+                    const progressText = document.getElementById(`progressText-${orderId}`);
+                    
+                    if (progressFill && progressText) {
+                        progressFill.style.width = state.width;
+                        progressText.textContent = state.text;
+                    }
+                } else {
+                    clearInterval(interval);
+                }
+            }, 5000); // Update every 5 seconds for demo
+        }
+
+        function showOrderSuccess() {
+            // Don't hide menu - show both menu and progress
+            document.getElementById('cartSection').style.display = 'none';
+            document.getElementById('orderSuccess').classList.add('show');
+            
+            // Show the "View My Orders" button since they now have orders
+            document.getElementById('viewOrdersBtn').classList.add('show');
+            
+            // Scroll to show the progress section
+            document.getElementById('orderSuccess').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function goToOrders() {
+            // Scroll to the orders section
+            document.getElementById('orderSuccess').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function orderMore() {
+            // Keep both menu and progress visible
+            document.getElementById('menuContainer').style.display = 'block';
+            
+            // Scroll back to menu
+            document.getElementById('menuContainer').scrollIntoView({ behavior: 'smooth' });
+        }
+
         function orderMore() {
             // Show menu and hide success message
             document.getElementById('menuContainer').style.display = 'block';
