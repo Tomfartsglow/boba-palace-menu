@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boba Palace - Order Now</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cart-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .cart-count {
+            background: #10b981;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Table Detection Banner */
+        .table-banner {
+            background: linear-gradient(90deg, #10b981, #059669);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            animation: slideDown 0.5s ease-out;
+            display: none;
+        }
+
+        .table-banner.show {
+            display: block;
+        }
+
+        .warning-banner {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Menu Categories */
+        .menu-category {
+            background: rgba(255, 255, 255, 0.95);
+            margin-bottom: 30px;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .category-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #764ba2;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .menu-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .item-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .item-price {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #f59e0b;
+        }
+
+        /* Customization Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 15px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #6b7280;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #dc2626;
+        }
+
+        .customization-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #764ba2;
+        }
+
+        .option-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            padding: 10px 15px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .option-btn:hover {
+            border-color: #667eea;
+        }
+
+        .option-btn.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .extras-section {
+            border-top: 2px solid #f3f4f6;
+            padding-top: 20px;
+        }
+
+        .extra-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .extra-item:hover {
+            border-color: #667eea;
+        }
+
+        .extra-item.selected {
+            background: #f0f7ff;
+            border-color: #667eea;
+        }
+
+        .notes-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .notes-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .price-summary {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .price-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .total-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #f59e0b;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 10px;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Cart Section */
+        .cart-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+
+        .cart-section.show {
+            display: block;
+        }
+
+        .cart-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .cart-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .remove-item-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .cart-modifications {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .cart-notes {
+            font-style: italic;
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .customer-form {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .place-order-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .place-order-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Order Success */
+        .order-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .order-success.show {
+            display: block;
+        }
+
+        .order-more-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .order-more-btn:hover {
+            background: white;
+            color: #10b981;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+                padding: 20px;
+            }
+
+            .option-group {
+                flex-direction: column;
+            }
+
+            .option-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">Boba Palace</div>
+            <div class="cart-info">
+                <div class="cart-count" id="cartCount">0</div>
+                <span>Items in Cart</span>
+            </div>
+        </div>
+
+        <!-- Table Detection Banner -->
+        <div class="table-banner" id="tableBanner">
+            <div>Table <span id="tableNumber"></span> Detected!</div>
+            <div style="font-size: 0.9rem; margin-top: 5px;">Your orders will be delivered to this table</div>
+        </div>
+
+        <!-- Warning Banner -->
+        <div class="warning-banner" id="warningBanner" style="display: none;">
+            Please scan the NFC tag on your table to get started, or continue for takeaway orders
+        </div>
+
+        <!-- Order Success -->
+        <div class="order-success" id="orderSuccess">
+            <h2>Order Placed Successfully!</h2>
+            <p>Your order has been received and is being prepared.</p>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 25%;"></div>
+                </div>
+                <div class="progress-text" id="progressText">Order Received</div>
+            </div>
+            <button class="order-more-btn" onclick="orderMore()">Order More Items</button>
+        </div>
+
+        <!-- Menu Categories -->
+        <div id="menuContainer">
+            <!-- Green Tea Refreshers -->
+            <div class="menu-category">
+                <h2 class="category-title">Green Tea Refreshers</h2>
+                <div class="menu-grid" id="greenTeaGrid"></div>
+            </div>
+
+            <!-- Milk Tea -->
+            <div class="menu-category">
+                <h2 class="category-title">Milk Tea</h2>
+                <div class="menu-grid" id="milkTeaGrid"></div>
+            </div>
+
+            <!-- Natural Smoothies -->
+            <div class="menu-category">
+                <h2 class="category-title">Natural Smoothies</h2>
+                <div class="menu-grid" id="smoothiesGrid"></div>
+            </div>
+
+            <!-- Frappes in Milk -->
+            <div class="menu-category">
+                <h2 class="category-title">Frappes in Milk</h2>
+                <div class="menu-grid" id="frappesGrid"></div>
+            </div>
+
+            <!-- Coffee & Others -->
+            <div class="menu-category">
+                <h2 class="category-title">Coffee & Others</h2>
+                <div class="menu-grid" id="coffeeGrid"></div>
+            </div>
+
+            <!-- Bubble Waffles -->
+            <div class="menu-category">
+                <h2 class="category-title">Bubble Waffles</h2>
+                <div class="menu-grid" id="wafflesGrid"></div>
+            </div>
+        </div>
+
+        <!-- Cart Section -->
+        <div class="cart-section" id="cartSection">
+            <h2 style="color: #764ba2; margin-bottom: 20px;">Your Order</h2>
+            <div id="cartItems"></div>
+            <div class="price-summary">
+                <div class="price-line total-price">
+                    <span>Total:</span>
+                    <span id="cartTotal">₡0</span>
+                </div>
+            </div>
+
+            <!-- Customer Form -->
+            <div class="customer-form">
+                <h3 style="color: #764ba2; margin-bottom: 20px;">Customer Information</h3>
+                <div class="form-group">
+                    <label class="form-label">Name *</label>
+                    <input type="text" class="form-input" id="customerName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone *</label>
+                    <input type="tel" class="form-input" id="customerPhone" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="customerEmail">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Special Notes</label>
+                    <textarea class="form-input" id="orderNotes" placeholder="Any special requests or dietary requirements..." rows="3"></textarea>
+                </div>
+                <button class="place-order-btn" onclick="placeOrder()">
+                    <span id="placeOrderText">Place Order</span>
+                    <span class="loading" id="orderLoading" style="display: none;"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customization Modal -->
+    <div class="modal" id="customizationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalItemName">Customize Your Item</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+
+            <div class="customization-section">
+                <div class="section-title">Sweetness Level</div>
+                <div class="option-group" id="sweetnessOptions">
+                    <button class="option-btn" data-value="0%">0%</button>
+                    <button class="option-btn selected" data-value="50%">50%</button>
+                    <button class="option-btn" data-value="75%">75%</button>
+                    <button class="option-btn" data-value="100%">100%</button>
+                </div>
+            </div>
+
+            <div class="customization-section">
+                <div class="section-title">Ice Level</div>
+                <div class="option-group" id="iceOptions">
+                    <button class="option-btn" data-value="No Ice">No Ice</button>
+                    <button class="option-btn" data-value="Light">Light</button>
+                    <button class="option-btn selected" data-value="Regular">Regular</button>
+                    <button class="option-btn" data-value="Extra">Extra</button>
+                </div>
+            </div>
+
+            <div class="customization-section extras-section">
+                <div class="section-title">Add Extras</div>
+                <div id="extrasOptions">
+                    <div class="extra-item" data-name="Vegan Coconut Milk" data-price="300">
+                        <span>Vegan Coconut Milk</span>
+                        <span>+₡300</span>
+                    </div>
+                    <div class="extra-item" data-name="Tapioca" data-price="300">
+                        <span>Tapioca Pearls</span>
+                        <span>+₡300</span>
+                    </div>
+                    <div class="extra-item" data-name="Popping Pearls" data-price="500">
+                        <span>Popping Pearls</span>
+                        <span>+₡500</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="customization-section">
+                <div class="section-title">Special Notes</div>
+                <textarea class="notes-input" id="itemNotes" placeholder="Any special requests for this item..." maxlength="200"></textarea>
+            </div>
+
+            <div class="price-summary">
+                <div class="price-line">
+                    <span>Base Price:</span>
+                    <span id="basePrice">₡0</span>
+                </div>
+                <div class="price-line">
+                    <span>Extras:</span>
+                    <span id="extrasPrice">₡0</span>
+                </div>
+                <div class="price-line total-price">
+                    <span>Total:</span>
+                    <span id="itemTotal">₡0</span>
+                </div>
+            </div>
+
+            <button class="add-to-cart-btn" onclick="addToCart()">Add to Cart</button>
+        </div>
+    </div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://your-project-ref.supabase.co';
+        const SUPABASE_ANON_KEY = 'your-anon-key';
+
+        // Menu Data
+        const menuData = {
+            "Green Tea Refreshers": {
+                basePrice: 2000,
+                items: ["Strawberry Lemonade", "Passionfruit", "Lemonade", "Strawberry Orange", "Raspberry"]
+            },
+            "Milk Tea": {
+                basePrice: 2500,
+                items: ["Original Black Tea", "Vanilla", "Caramel", "Matcha", "Taro", "Oolong", "Thai Tea", "Jasmine Green Tea"]
+            },
+            "Natural Smoothies": {
+                basePrice: 2300,
+                items: ["Mango", "Strawberry", "Banana Cacao", "Blueberry Banana", "Strawberry Banana"]
+            },
+            "Frappes in Milk": {
+                basePrice: 2800,
+                items: ["Matcha", "Taro", "Thai Tea", "Mocha", "Chocolate"]
+            },
+            "Coffee & Others": {
+                basePrice: 0,
+                items: [
+                    {name: "Brown Sugar Latte", price: 2500},
+                    {name: "Vietnamese Coffee", price: 2300}
+                ]
+            },
+            "Bubble Waffles": {
+                basePrice: 2000,
+                items: ["Original Bubble Waffle"]
+            }
+        };
+
+        // Global Variables
+        let currentTableNumber = null;
+        let cart = [];
+        let currentItem = null;
+        let currentOrderId = null;
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            detectTable();
+            renderMenu();
+            setupEventListeners();
+        });
+
+        function detectTable() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tableParam = urlParams.get('table');
+            
+            if (tableParam && !isNaN(tableParam) && tableParam >= 1 && tableParam <= 50) {
+                currentTableNumber = parseInt(tableParam);
+                document.getElementById('tableNumber').textContent = currentTableNumber;
+                document.getElementById('tableBanner').classList.add('show');
+            } else {
+                document.getElementById('warningBanner').style.display = 'block';
+            }
+        }
+
+        function renderMenu() {
+            Object.entries(menuData).forEach(([category, data]) => {
+                const gridId = getGridId(category);
+                const grid = document.getElementById(gridId);
+                
+                if (category === "Coffee & Others") {
+                    data.items.forEach(item => {
+                        const itemElement = createMenuItem(item.name, item.price, category);
+                        grid.appendChild(itemElement);
+                    });
+                } else {
+                    data.items.forEach(item => {
+                        const itemName = typeof item === 'string' ? item : item.name;
+                        const itemElement = createMenuItem(itemName, data.basePrice, category);
+                        grid.appendChild(itemElement);
+                    });
+                }
+            });
+        }
+
+        function getGridId(category) {
+            const gridMap = {
+                "Green Tea Refreshers": "greenTeaGrid",
+                "Milk Tea": "milkTeaGrid",
+                "Natural Smoothies": "smoothiesGrid",
+                "Frappes in Milk": "frappesGrid",
+                "Coffee & Others": "coffeeGrid",
+                "Bubble Waffles": "wafflesGrid"
+            };
+            return gridMap[category];
+        }
+
+        function createMenuItem(name, price, category) {
+            const div = document.createElement('div');
+            div.className = 'menu-item';
+            div.innerHTML = `
+                <div class="item-name">${name}</div>
+                <div class="item-price">₡${price.toLocaleString()}</div>
+            `;
+            div.onclick = () => openCustomization(name, price, category);
+            return div;
+        }
+
+        function openCustomization(name, price, category) {
+            currentItem = { name, price, category };
+            document.getElementById('modalItemName').textContent = `Customize ${name}`;
+            document.getElementById('basePrice').textContent = `₡${price.toLocaleString()}`;
+            
+            // Reset selections
+            resetModalSelections();
+            
+            // Show waffle extras if applicable
+            if (category === "Bubble Waffles") {
+                showWaffleExtras();
+            } else {
+                hideWaffleExtras();
+            }
+            
+            updateItemTotal();
+            document.getElementById('customizationModal').style.display = 'block';
+        }
+
+        function resetModalSelections() {
+            // Reset sweetness and ice selections
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.querySelector('[data-value="50%"]').classList.add('selected');
+            document.querySelector('[data-value="Regular"]').classList.add('selected');
+            
+            // Reset extras
+            document.querySelectorAll('.extra-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Reset notes
+            document.getElementById('itemNotes').value = '';
+        }
+
+        function showWaffleExtras() {
+            const extrasContainer = document.getElementById('extrasOptions');
+            extrasContainer.innerHTML = `
+                <div class="extra-item" data-name="Ice Cream" data-price="500">
+                    <span>Add Ice Cream</span>
+                    <span>+₡500</span>
+                </div>
+                <div class="extra-item" data-name="Strawberries" data-price="200">
+                    <span>Add Strawberries</span>
+                    <span>+₡200</span>
+                </div>
+                <div class="extra-item" data-name="Vegan Coconut Milk" data-price="300">
+                    <span>Vegan Coconut Milk</span>
+                    <span>+₡300</span>
+                </div>
+            `;
+            setupExtrasListeners();
+        }
+
+        function hideWaffleExtras() {
+            const extrasContainer = document.getElementById('extrasOptions');
+            extrasContainer.innerHTML = `
+                <div class="extra-item" data-name="Vegan Coconut Milk" data-price="300">
+                    <span>Vegan Coconut Milk</span>
+                    <span>+₡300</span>
+                </div>
+                <div class="extra-item" data-name="Tapioca" data-price="300">
+                    <span>Tapioca Pearls</span>
+                    <span>+₡300</span>
+                </div>
+                <div class="extra-item" data-name="Popping Pearls" data-price="500">
+                    <span>Popping Pearls</span>
+                    <span>+₡500</span>
+                </div>
+            `;
+            setupExtrasListeners();
+        }
+
+        function setupEventListeners() {
+            // Option buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('option-btn')) {
+                    const group = e.target.parentElement;
+                    group.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    e.target.classList.add('selected');
+                    updateItemTotal();
+                }
+            });
+
+            setupExtrasListeners();
+        }
+
+        function setupExtrasListeners() {
+            document.querySelectorAll('.extra-item').forEach(item => {
+                item.onclick = function() {
+                    this.classList.toggle('selected');
+                    updateItemTotal();
+                };
+            });
+        }
+
+        function updateItemTotal() {
+            if (!currentItem) return;
+            
+            let total = currentItem.price;
+            let extrasTotal = 0;
+            
+            // Calculate extras
+            document.querySelectorAll('.extra-item.selected').forEach(item => {
+                extrasTotal += parseInt(item.dataset.price);
+            });
+            
+            total += extrasTotal;
+            
+            document.getElementById('extrasPrice').textContent = `₡${extrasTotal.toLocaleString()}`;
+            document.getElementById('itemTotal').textContent = `₡${total.toLocaleString()}`;
+        }
+
+        function addToCart() {
+            if (!currentItem) return;
+            
+            const sweetness = document.querySelector('#sweetnessOptions .option-btn.selected').dataset.value;
+            const ice = document.querySelector('#iceOptions .option-btn.selected').dataset.value;
+            const notes = document.getElementById('itemNotes').value;
+            
+            const extras = [];
+            let extrasTotal = 0;
+            document.querySelectorAll('.extra-item.selected').forEach(item => {
+                const extraName = item.dataset.name;
+                const extraPrice = parseInt(item.dataset.price);
+                extras.push({ name: extraName, price: extraPrice });
+                extrasTotal += extraPrice;
+            });
+            
+            const cartItem = {
+                id: Date.now(),
+                name: currentItem.name,
+                basePrice: currentItem.price,
+                category: currentItem.category,
+                modifications: {
+                    sweetness,
+                    ice,
+                    extras
+                },
+                specialNotes: notes,
+                totalPrice: currentItem.price + extrasTotal
+            };
+            
+            cart.push(cartItem);
+            updateCartDisplay();
+            closeModal();
+        }
+
+        function updateCartDisplay() {
+            const cartCount = document.getElementById('cartCount');
+            const cartSection = document.getElementById('cartSection');
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            cartCount.textContent = cart.length;
+            
+            if (cart.length > 0) {
+                cartSection.classList.add('show');
+                
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-header">
+                            <div class="cart-item-name">${item.name}</div>
+                            <button class="remove-item-btn" onclick="removeFromCart(${item.id})">Remove</button>
+                        </div>
+                        <div class="cart-modifications">
+                            Sweetness: ${item.modifications.sweetness} | Ice: ${item.modifications.ice}
+                            ${item.modifications.extras.length > 0 ? 
+                                '<br>Extras: ' + item.modifications.extras.map(e => e.name).join(', ') 
+                                : ''}
+                        </div>
+                        ${item.specialNotes ? `<div class="cart-notes">"${item.specialNotes}"</div>` : ''}
+                        <div class="price-line">
+                            <span>Total:</span>
+                            <span>₡${item.totalPrice.toLocaleString()}</span>
+                        </div>
+                    </div>
+                `).join('');
+                
+                const total = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+                cartTotal.textContent = `₡${total.toLocaleString()}`;
+            } else {
+                cartSection.classList.remove('show');
+            }
+        }
+
+        function removeFromCart(itemId) {
+            cart = cart.filter(item => item.id !== itemId);
+            updateCartDisplay();
+        }
+
+        function closeModal() {
+            document.getElementById('customizationModal').style.display = 'none';
+            currentItem = null;
+        }
+
+        async function placeOrder() {
+            if (cart.length === 0) {
+                alert('Please add items to your cart first.');
+                return;
+            }
+            
+            const customerName = document.getElementById('customerName').value.trim();
+            const customerPhone = document.getElementById('customerPhone').value.trim();
+            const customerEmail = document.getElementById('customerEmail').value.trim();
+            const orderNotes = document.getElementById('orderNotes').value.trim();
+            
+            if (!customerName || !customerPhone) {
+                alert('Please fill in your name and phone number.');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('placeOrderText').style.display = 'none';
+            document.getElementById('orderLoading').style.display = 'inline-block';
+            
+            const orderData = {
+                customer_name: customerName,
+                customer_phone: customerPhone,
+                customer_email: customerEmail,
+                notes: orderNotes,
+                items: cart,
+                total: cart.reduce((sum, item) => sum + item.totalPrice, 0),
+                table_number: currentTableNumber,
+                status: 'received'
+            };
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    currentOrderId = result[0].id;
+                    showOrderSuccess();
+                    clearCart();
+                } else {
+                    throw new Error('Failed to place order');
+                }
+            } catch (error) {
+                console.error('Order placement error:', error);
+                alert('Sorry, there was an error placing your order. Please try again.');
+            } finally {
+                // Hide loading
+                document.getElementById('placeOrderText').style.display = 'inline-block';
+                document.getElementById('orderLoading').style.display = 'none';
+            }
+        }
+
+        function showOrderSuccess() {
+            document.getElementById('menuContainer').style.display = 'none';
+            document.getElementById('cartSection').style.display = 'none';
+            document.getElementById('orderSuccess').classList.add('show');
+            
+            // Start progress tracking
+            trackOrderProgress();
+        }
+
+        function trackOrderProgress() {
+            // Simulate order progress for demo
+            const progressStates = [
+                { width: '25%', text: 'Order Received' },
+                { width: '50%', text: 'Preparing Your Order' },
+                { width: '75%', text: 'Almost Ready' },
+                { width: '100%', text: 'Order Complete!' }
+            ];
+            
+            let currentState = 0;
+            
+            const interval = setInterval(() => {
+                if (currentState < progressStates.length - 1) {
+                    currentState++;
+                    const state = progressStates[currentState];
+                    document.getElementById('progressFill').style.width = state.width;
+                    document.getElementById('progressText').textContent = state.text;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 5000); // Update every 5 seconds for demo
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCartDisplay();
+            
+            // Clear form
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerPhone').value = '';
+            document.getElementById('customerEmail').value = '';
+            document.getElementById('orderNotes').value = '';
+        }
+
+        function orderMore() {
+            // Show menu and hide success message
+            document.getElementById('menuContainer').style.display = 'block';
+            document.getElementById('orderSuccess').classList.remove('show');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Modal close functionality
+        window.onclick = function(event) {
+            const modal = document.getElementById('customizationModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
