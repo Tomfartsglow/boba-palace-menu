@@ -559,13 +559,10 @@
 
         <!-- Order Success -->
         <div class="order-success" id="orderSuccess">
-            <h2>Order Placed Successfully!</h2>
-            <p>Your order has been received and is being prepared.</p>
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width: 25%;"></div>
-                </div>
-                <div class="progress-text" id="progressText">Order Received</div>
+            <h2>Orders Placed Successfully!</h2>
+            <p>Your orders have been received and are being prepared.</p>
+            <div id="progressContainer">
+                <!-- Progress bars will be added here dynamically -->
             </div>
             <button class="order-more-btn" onclick="orderMore()">Order More Items</button>
         </div>
@@ -757,7 +754,7 @@
         let currentTableNumber = null;
         let cart = [];
         let currentItem = null;
-        let currentOrderId = null;
+        let orderHistory = []; // Track all orders placed
 
         // Initialize App
         document.addEventListener('DOMContentLoaded', function() {
@@ -1066,9 +1063,23 @@
                 
                 if (response.ok) {
                     const result = await response.json();
-                    currentOrderId = result[0].id;
-                    showOrderSuccess();
+                    const newOrderId = result[0].id;
+                    
+                    // Add to order history
+                    orderHistory.push({
+                        id: newOrderId,
+                        items: [...cart],
+                        total: cart.reduce((sum, item) => sum + item.totalPrice, 0)
+                    });
+                    
+                    // Add new progress bar for this order
+                    addProgressBar(newOrderId, cart);
+                    
+                    // Clear cart and form for next order
                     clearCart();
+                    
+                    // Show success (keeps menu visible)
+                    showOrderSuccess();
                 } else {
                     throw new Error('Failed to place order');
                 }
@@ -1086,6 +1097,10 @@
             document.getElementById('menuContainer').style.display = 'none';
             document.getElementById('cartSection').style.display = 'none';
             document.getElementById('orderSuccess').classList.add('show');
+            
+            // Reset progress bar for new order
+            document.getElementById('progressFill').style.width = '25%';
+            document.getElementById('progressText').textContent = 'Order Received';
             
             // Start progress tracking
             trackOrderProgress();
@@ -1129,6 +1144,9 @@
             // Show menu and hide success message
             document.getElementById('menuContainer').style.display = 'block';
             document.getElementById('orderSuccess').classList.remove('show');
+            
+            // Clear the current order success state
+            currentOrderId = null;
             
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
